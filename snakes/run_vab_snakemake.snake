@@ -1,0 +1,55 @@
+import numpy as np
+import os
+from src import data, simulation
+import itertools
+from tvb.simulator.lab import *
+
+
+basedir    = os.path.join(
+        "/mnt", "scratch", "scratch", "virtual_aging_cohort"
+)
+
+G_VECT     = np.arange(1.5,3.25,0.05)
+G_LIST     = list(G_VECT.round(7))
+
+N_VECT     = np.array([0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05])
+N_LIST     = list(N_VECT.round(7))
+
+A_LIST     = [0.0]
+
+P_LIST     = ['sub-0008',
+ 'sub-0012',
+ 'sub-0140',
+ 'sub-0146',
+ 'sub-0763',
+ 'sub-0906',
+ 'sub-1278',
+ 'sub-1280',
+ 'sub-1303',
+ 'sub-1309',
+ 'sub-1313']
+
+SIM_BATCH  = 4
+
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+sims = list(itertools.product(P_LIST, G_LIST, N_LIST, A_LIST))
+
+rule target:
+    input:[f"OUT_VIRT_COH/batch_pone_{i}.done" for i in range((len(G_LIST)*len(P_LIST)*len(N_LIST)*len(A_LIST)) // SIM_BATCH)]
+
+rule simulate:
+    output:
+        os.path.join(basedir, "julich_data_group_rs_pat{pat}_G{G}_nsigma{nsig}_alpha1{a}_cohort_heun.npz")
+    group: "simgroup"
+    shell:
+        "python scripts/run_vab_github.py -G {wildcards.G} -n {wildcards.nsig} -o {output} -p {wildcards.pat} -a {wildcards.a} -l 30000"
+
+for i, chunk in enumerate(chunks(sims, SIM_BATCH)):
+    rule:
+        input: [os.path.join(basedir, f"julich_data_group_rs_pat{pat}_G{G}_nsigma{nsig}_alpha1{a}_cohort_heun.npz") for (pat,G,nsig,a) in chunk]
+        group: "simgroup"
+        output: touch(f"OUT_VIRT_COH/batch_pone_{i}.done")

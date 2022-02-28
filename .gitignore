@@ -1,0 +1,5 @@
+.DS_store
+data/external
+data/interim
+data/temporary_results
+.ipynb_checkpoints
