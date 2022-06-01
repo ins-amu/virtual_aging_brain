@@ -1,3 +1,9 @@
 sklearn
 nilearn
 neurokit
+tvb-data
+sklearn
+bctpy
+pandas
+seaborn
+tvb-library<=2.5
