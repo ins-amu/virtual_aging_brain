@@ -33,20 +33,16 @@ python3 -mvenv env
 pip3 install --upgrade pip
 pip3 install wheel
 pip3 install -r requirements.txt
-pip3 install tvb-data
-pip3 install jupyterlab
-pip3 install sklearn
-pip3 install bctpy
-pip3 install pandas
-pip3 install seaborn
 pip3 install -e .
-jupyter-lab
 ```
 
-3. Test the environment. Open a new tab on the terminal and run the following commands
+
+
+3. To use the environment from the Jupyter notebooks, you can either [register the kernel](https://ipython.readthedocs.io/en/stable/install/kernel_install.html), or install the `jupyter-lab` in the environment. Here we show the latter. Open a new tab on the terminal and run the following commands
 
 ```
 . env/bin/activate
+pip3 install jupyterlab
 jupyter-lab
 ```
 
@@ -79,14 +75,9 @@ jupyter-lab
    conda activate env
    pip3 install wheel
    pip3 install -r requirements.txt
-   pip3 install tvb-data
-   pip3 install jupyterlab
-   pip3 install sklearn
-   pip3 install bctpy
-   pip3 install pandas
-   pip3 install seaborn
    pip3 install -e .
    ```
+   Again, either install the kernel to global jupyter instance, or install jupyterlab in the environment.
 
 9. Run the following command:
 
